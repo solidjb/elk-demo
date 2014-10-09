@@ -1,0 +1,17 @@
+<configuration>
+    <!-- always a good activate OnConsoleStatusListener -->
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+
+    <appender name="JsonAccessLogFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.dir}/json_access.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/json_access.log.%d{yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder class="org.oclc.elk.demo.logging.logback.access.LogstashEncoder">
+            <sourceApplication>ServiceC</sourceApplication>
+        </encoder>
+    </appender>
+
+    <appender-ref ref="JsonAccessLogFileAppender" />
+</configuration>

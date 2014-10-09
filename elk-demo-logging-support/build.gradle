@@ -1,0 +1,19 @@
+description = 'Classes that provide logging benefits.'
+
+dependencies {
+    compile(
+            libraries.groovyAll,
+            libraries.httpClient,
+            libraries.guava,
+            libraries.commonsLang,
+            libraries.commonsCollections,
+            libraries.commonsIo,
+            libraries.jacksonDatabind,
+            libraries.slf4jApi,
+            libraries.logbackCore,
+            libraries.logbackClassic,
+            libraries.logbackAccess,
+            libraries.servletApi,
+            libraries.springCore
+    )
+}

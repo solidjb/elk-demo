@@ -1,0 +1,38 @@
+dependencies {
+
+    compile(libraries.springBootStarterWeb) {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+
+    compile(
+            project(':elk-demo-health'),
+            project(':elk-demo-logging-support'),
+
+            libraries.springBootActuator,
+            libraries.springBootStarterJetty,
+            libraries.springAop,
+
+            libraries.dropWizardMetricsHttpClient,
+            libraries.metricsAnnotations,
+
+            libraries.groovyAll,
+
+            libraries.jettyServer,
+            libraries.jettyServlet,
+            libraries.jettyServlets,
+            libraries.jettyJmx,
+            libraries.jettyMonitor,
+
+            libraries.springContext,
+            libraries.springWeb,
+
+            libraries.log4jOverSlf4j,
+            libraries.jclOverSlf4j,
+            libraries.logbackClassic,
+            libraries.logbackAccess
+    )
+
+    runtime(
+            libraries.aspectjRt
+    )
+}

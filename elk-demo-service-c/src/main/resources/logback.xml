@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Allow dynamic config changes via JMX -->
+    <jmxConfigurator/>
+
+    <!-- Rolling file appender -->
+    <appender name="FileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.dir}/webapp-out.log</file>
+        <encoder class="org.oclc.elk.demo.logging.logback.LogstashEncoder">
+            <sourceApplication>ServiceC</sourceApplication>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/webapp-out.log.%d{yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <root>
+        <level value="info"/>
+        <appender-ref ref="FileAppender"/>
+    </root>
+
+    <logger name="org.oclc">
+        <level value="debug" />
+    </logger>
+
+    <logger name="org.oclc.tracing.timed">
+        <level value="trace" />
+    </logger>
+
+</configuration>

@@ -1,0 +1,14 @@
+description = "ELK Demo Health."
+
+dependencies {
+    compile(
+            libraries.groovyAll,
+            libraries.springBootActuator,
+            libraries.springWeb,
+            libraries.httpClient,
+            libraries.httpCore,
+            libraries.log4jOverSlf4j,
+            libraries.jclOverSlf4j,
+            libraries.metricsAnnotations
+    )
+}

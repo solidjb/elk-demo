@@ -1,0 +1,6 @@
+*.iml
+*/build
+*/logs
+.gradle
+.idea
+elk-demo-logstash/data

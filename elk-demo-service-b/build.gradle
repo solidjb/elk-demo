@@ -1,0 +1,68 @@
+apply plugin: 'application'
+
+def mainClass = "org.oclc.elk.demo.springboot.Application"
+mainClassName = mainClass
+
+tasks.withType(Tar) {
+    compression = Compression.GZIP
+    extension = 'tar.gz'
+    archiveName = "${project.parent.name}.tar.gz"
+}
+run {
+    systemProperties = [
+            'log.dir': 'logs',
+    ] + System.properties
+}
+startScripts {
+    mainClassName = mainClass
+    applicationName = project.parent.name
+}
+
+dependencies {
+
+    compile(libraries.springBootStarterWeb) {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+
+    compile(
+            project(':elk-demo-health'),
+            project(':elk-demo-logging-support'),
+            project(':elk-demo-service-support'),
+
+            libraries.springBootActuator,
+            libraries.springBootStarterJetty,
+
+            libraries.dropWizardMetricsHttpClient,
+            libraries.metricsAnnotations,
+
+            libraries.groovyAll,
+
+            libraries.jettyServer,
+            libraries.jettyServlet,
+            libraries.jettyServlets,
+            libraries.jettyJmx,
+            libraries.jettyMonitor,
+
+            libraries.springContext,
+            libraries.springWeb,
+
+            libraries.log4jOverSlf4j,
+            libraries.jclOverSlf4j,
+            libraries.logbackClassic,
+            libraries.logbackAccess
+    )
+}
+
+//This allows other modules to depend directly on this file.
+artifacts {
+    archives distTar
+}
+
+import org.apache.tools.ant.filters.*
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            name: project.parent.name,
+            version: project.version
+    ]
+}
