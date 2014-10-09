@@ -1,0 +1,124 @@
+ext.versions = [
+        gradle: '2.1',
+        java: '1.8',
+        junit: '4.11',
+        logback: '1.1.2',
+        slf4j: '1.7.7',
+        groovy: '2.3.7',
+        groovyClassifier: 'indy',
+        spring: '4.1.1.RELEASE',
+        springBoot: '1.1.7.RELEASE',
+        dropwizardMetrics: '3.1.0',
+        metricsAnnotations: '3.0.2',
+        jetty: '9.2.3.v20140905',
+        httpClient: '4.3.5',
+        httpCore: '4.3.2',
+        guava: '18.0',
+        commonsLang: '2.6',
+        commonsCollections: '3.2.1',
+        commonsIo: '2.4',
+        jackson: '2.4.3',
+        servletApi: '3.1.0',
+        aspectj: '1.5.4'
+]
+
+ext.libraries = [
+        junit: "junit:junit:${versions.junit}",
+        slf4jApi: "org.slf4j:slf4j-api:${versions.slf4j}",
+        logbackCore: "ch.qos.logback:logback-core:${versions.logback}",
+        logbackClassic: "ch.qos.logback:logback-classic:${versions.logback}",
+        logbackAccess: "ch.qos.logback:logback-access:${versions.logback}",
+        groovyAll: "org.codehaus.groovy:groovy-all:${versions.groovy}:${versions.groovyClassifier}",
+        springCore: "org.springframework:spring-core:${versions.spring}",
+        springAop: "org.springframework:spring-aop:${versions.spring}",
+        springWeb: "org.springframework:spring-web:${versions.spring}",
+        springContext: "org.springframework:spring-context:${versions.spring}",
+        springBootActuator: "org.springframework.boot:spring-boot-actuator:${versions.springBoot}",
+        springBootStarterWeb: "org.springframework.boot:spring-boot-starter-web:${versions.springBoot}",
+        springBootStarterJetty: "org.springframework.boot:spring-boot-starter-jetty:${versions.springBoot}",
+        httpClient: "org.apache.httpcomponents:httpclient:${versions.httpClient}",
+        httpCore: "org.apache.httpcomponents:httpcore:${versions.httpCore}",
+        log4jOverSlf4j: "org.slf4j:log4j-over-slf4j:${versions.slf4j}",
+        jclOverSlf4j: "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
+        dropWizardMetricsHttpClient: "io.dropwizard.metrics:metrics-httpclient:${versions.dropwizardMetrics}",
+        metricsAnnotations: "com.ryantenney.metrics:metrics-spring:${versions.metricsAnnotations}",
+        jettyServer: "org.eclipse.jetty:jetty-server:${versions.jetty}",
+        jettyServlet: "org.eclipse.jetty:jetty-servlet:${versions.jetty}",
+        jettyServlets: "org.eclipse.jetty:jetty-servlets:${versions.jetty}",
+        jettyJmx: "org.eclipse.jetty:jetty-jmx:${versions.jetty}",
+        jettyMonitor: "org.eclipse.jetty:jetty-monitor:${versions.jetty}",
+        guava: "com.google.guava:guava:${versions.guava}",
+        commonsLang: "commons-lang:commons-lang:${versions.commonsLang}",
+        commonsCollections: "commons-collections:commons-collections:${versions.commonsCollections}",
+        commonsIo: "commons-io:commons-io:${versions.commonsIo}",
+        servletApi: "javax.servlet:javax.servlet-api:${versions.servletApi}",
+        jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}",
+        aspectjRt: "aspectj:aspectjrt:${versions.aspectj}"
+]
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/groups/public'
+        }
+        maven {
+            url 'http://repo.springsource.org/milestone'
+        }
+        maven {
+            url 'http://repo.springsource.org/snapshot'
+        }
+    }
+
+}
+
+allprojects {
+
+    group = 'org.oclc.elk.demo'
+    version = '0.1' 
+
+    configurations.all {
+        it.exclude group: 'log4j', module: 'log4j'
+        it.exclude module: 'slf4j-log4j12'
+        it.exclude group: 'commons-logging', module: 'commons-logging'
+        it.exclude module: 'rhino.js'
+        it.exclude module: 'servlet-api'
+        it.exclude module: 'slf4j-simple'
+    }
+}
+
+subprojects {
+    apply plugin: 'base'
+
+        apply plugin: 'groovy'
+        tasks.withType(GroovyCompile) {
+            sourceCompatibility = versions.java
+            targetCompatibility = versions.java
+
+            groovyOptions.encoding = 'UTF-8'
+            groovyOptions.fork = true
+            groovyOptions.optimizationOptions.indy = true
+
+            options.fork = true
+            options.forkOptions.executable = "${project.javaJdkHome}/bin/javac"
+            options.encoding = 'UTF-8'
+        }
+
+
+        dependencies {
+        }
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://repo.springsource.org/milestone'
+        }
+        maven {
+            url 'http://repo.springsource.org/snapshot'
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = versions.gradle
+}

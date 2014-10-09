@@ -1,0 +1,11 @@
+rootProject.name = 'elk-demo'
+
+include 'elk-demo-health',
+        'elk-demo-service-a',
+        'elk-demo-service-b',
+        'elk-demo-service-c',
+        'elk-demo-service-d',
+        'elk-demo-service-e',
+        'elk-demo-logging-support',
+        'elk-demo-service-support'
+
