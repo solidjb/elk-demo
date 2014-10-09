@@ -34,19 +34,12 @@ task loadTest(dependsOn: 'classes') << {
             def gatlingScenarioClass = (file.getPath() - (sourceSets.main.output.classesDir.getPath() + File.separator) - '.class')
                     .replace(File.separator, '.')
 
-            if (gatlingScenarioClass.contains('org.oclc.dapi.benchmark.service.simulation')
-                    && !gatlingScenarioClass.endsWith('BaseSimulation')
-                    && !gatlingScenarioClass.contains('$')
-            ) {
-
                 javaexec {
                     // I do not use this so
                     main = 'io.gatling.app.Gatling'
                     classpath = sourceSets.main.output + sourceSets.main.compileClasspath + files(configurations.compile.files)
                     executable = "${project.javaJdkHome}/bin/java"
-                    systemProperties([
-                            'dapi.baseURL': System.properties['dapi.baseURL']
-                    ])
+
                     args  '-sbf',
                             sourceSets.main.output.classesDir,
                             '-s',
@@ -54,7 +47,6 @@ task loadTest(dependsOn: 'classes') << {
                             '-rf',
                             gatlingDir
                 }
-            }
         }
     }
 
