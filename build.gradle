@@ -19,7 +19,9 @@ ext.versions = [
         commonsIo: '2.4',
         jackson: '2.4.3',
         servletApi: '3.1.0',
-        aspectj: '1.5.4'
+        aspectj: '1.5.4',
+        gatling: '2.0.0',
+        scala: '2.10.4'
 ]
 
 ext.libraries = [
@@ -53,7 +55,15 @@ ext.libraries = [
         commonsIo: "commons-io:commons-io:${versions.commonsIo}",
         servletApi: "javax.servlet:javax.servlet-api:${versions.servletApi}",
         jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}",
-        aspectjRt: "aspectj:aspectjrt:${versions.aspectj}"
+        aspectjRt: "aspectj:aspectjrt:${versions.aspectj}",
+        gatlingApp: "io.gatling:gatling-app:${versions.gatling}",
+        gatlingCore: "io.gatling:gatling-core:${versions.gatling}",
+        gatlingHttp: "io.gatling:gatling-http:${versions.gatling}",
+        gatlingMetrics: "io.gatling:gatling-metrics:${versions.gatling}",
+        gatlingCharts: "io.gatling:gatling-charts:${versions.gatling}",
+        gatlingChartsHighCharts: "io.gatling.highcharts:gatling-charts-highcharts:${versions.gatling}",
+        scalaLib: "org.scala-lang:scala-library:${versions.scala}",
+        scalaCompiler: "org.scala-lang:scala-compiler:${versions.scala}"
 ]
 
 buildscript {

@@ -7,5 +7,6 @@ include 'elk-demo-health',
         'elk-demo-service-d',
         'elk-demo-service-e',
         'elk-demo-logging-support',
-        'elk-demo-service-support'
+        'elk-demo-service-support',
+        'elk-demo-load-test'
 

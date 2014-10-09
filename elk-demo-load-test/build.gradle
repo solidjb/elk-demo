@@ -1,0 +1,77 @@
+description='Load tests of the Services to produce traffic using Gatling.'
+
+apply plugin: 'scala'
+compileScala {
+    compileScala.scalaCompileOptions.additionalParameters = ['-target:jvm-1.8']
+}
+
+compileTestScala {
+    compileTestScala.scalaCompileOptions.additionalParameters = ['-target:jvm-1.8']
+}
+
+dependencies {
+    compile(
+            libraries.scalaLib,
+            libraries.logbackClassic,
+            libraries.gatlingApp,
+            libraries.gatlingCore,
+            libraries.gatlingHttp,
+            libraries.gatlingMetrics,
+            libraries.gatlingCharts,
+            libraries.gatlingChartsHighCharts,
+
+            libraries.log4jOverSlf4j,
+            libraries.jclOverSlf4j
+    )
+}
+
+task loadTest(dependsOn: 'classes') << {
+    logger.lifecycle(" ---- Executing all Gatling scenarios from: ${sourceSets.main.output.classesDir} ----")
+
+    def gatlingDir = "${project.buildDir}/reports/gatling"
+    sourceSets.main.output.classesDir.eachFileRecurse { file ->
+        if (file.isFile()) {
+            def gatlingScenarioClass = (file.getPath() - (sourceSets.main.output.classesDir.getPath() + File.separator) - '.class')
+                    .replace(File.separator, '.')
+
+            if (gatlingScenarioClass.contains('org.oclc.dapi.benchmark.service.simulation')
+                    && !gatlingScenarioClass.endsWith('BaseSimulation')
+                    && !gatlingScenarioClass.contains('$')
+            ) {
+
+                javaexec {
+                    // I do not use this so
+                    main = 'io.gatling.app.Gatling'
+                    classpath = sourceSets.main.output + sourceSets.main.compileClasspath + files(configurations.compile.files)
+                    executable = "${project.javaJdkHome}/bin/java"
+                    systemProperties([
+                            'dapi.baseURL': System.properties['dapi.baseURL']
+                    ])
+                    args  '-sbf',
+                            sourceSets.main.output.classesDir,
+                            '-s',
+                            gatlingScenarioClass,
+                            '-rf',
+                            gatlingDir
+                }
+            }
+        }
+    }
+
+    def outputs = file(gatlingDir).listFiles().collect {
+        it.name
+    }
+
+    new File(gatlingDir, 'index.html').write(
+            "<html>" +
+                    "<head><title>Gatling Reports</title></head>" +
+                    "<body>" +
+                    "<ol>" +
+                    (outputs.collect { "<li><a href='${it}/index.html'>${it}</a></li>" }.join('')) +
+                    "</ol>" +
+                    "</body>" +
+                    "</html>"
+    )
+}
+
+
