@@ -23,7 +23,13 @@ class RandomHealthIndicator extends AbstractHealthIndicator {
         def snapshot = System.currentTimeMillis()
 
         if (determineError(snapshot)) {
-            throw new IllegalArgumentException('The argument you passed is exceptionally illegal.')
+
+            def exception = new IllegalArgumentException('The argument you passed is exceptionally illegal.')
+
+            //Spring logs nothing, so we have to...
+            log.warn('We blew up.', exception)
+
+            throw exception
         }
 
         def waitTime = determineWaitTime(snapshot)
@@ -38,6 +44,6 @@ class RandomHealthIndicator extends AbstractHealthIndicator {
     }
 
     boolean determineError(def snapshot) {
-        snapshot % 1000 == 0
+        snapshot % 50 == 0
     }
 }
