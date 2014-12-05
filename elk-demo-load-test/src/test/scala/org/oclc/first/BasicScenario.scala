@@ -8,7 +8,7 @@ import scala.concurrent.duration._
 
 import io.gatling.http.Predef._
 
-class BasicScenario extends Simulation { 
+class BasicScenario extends Simulation {
 
   private def createHttpConf(port:Int) : HttpProtocolBuilder = {
       http 

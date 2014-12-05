@@ -32,9 +32,31 @@ class LogstashEncoder extends EncoderBase<ILoggingEvent> {
 
     private static final FastDateFormat ISO_DATETIME_TIME_ZONE_FORMAT_WITH_MILLIS = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
 
-    private static final StackTraceElement DEFAULT_CALLER_DATA = new StackTraceElement("", "", "", 0)
+    // The following 3 values are the only logstash defined fields.
+    private static final String TIMESTAMP_FIELD_NAME = "@timestamp"
+    private static final String MESSAGE_FIELD_NAME = "message"
+    public static final String VERSION_FIELD_NAME = "@version"
 
-    private static final String SCHEMA_VERSION = "1.0"
+    private static final String EXCEPTION_CLASS_FIELD_NAME = 'exception_class'
+    private static final String STACK_TRACE_FIELD_NAME = 'stack_trace'
+    private static final String CALLER_CLASS_NAME_FIELD_NAME = 'caller_class_name'
+    private static final String CALLER_METHOD_NAME_FIELD_NAME = 'caller_method_name'
+    private static final String CALLER_FILE_NAME_FIELD_NAME = 'caller_file_name'
+    private static final String CALLER_LINE_NUMBER_FIELD_NAME = 'caller_line_number'
+    private static final String THREAD_NAME_FIELD_NAME = 'thread_name'
+    private static final String LOGGER_NAME_FIELD_NAME = 'logger_name'
+    private static final String LEVEL_FIELD_NAME = 'level'
+    private static final String SOURCE_APPLICATION_FIELD_NAME = 'source_application'
+    private static final String TAGS_FIELD_NAME = 'tags'
+    private static final String TYPE_FIELD_NAME = 'type'
+
+    private static final String EXCEPTION_OCCURRED_TAG = 'EXCEPTION_OCCURRED'
+
+    private static final String APPLICATION_TYPE_VALUE = 'application'
+
+    private static final StackTraceElement DEFAULT_CALLER_DATA = new StackTraceElement('', '', '', 0)
+
+    private static final String SCHEMA_VERSION = '1.0'
 
     private boolean immediateFlush = true
 
@@ -48,9 +70,11 @@ class LogstashEncoder extends EncoderBase<ILoggingEvent> {
 
         putFromMdc(event, eventNode)
 
+        boolean hasException = putStackTrace(eventNode, event)
+
         putTimestamp(eventNode, event)
         putVersion(eventNode)
-        putTags(eventNode, event)
+        putTags(eventNode, event, hasException)
         putMessage(eventNode, event)
         putSourceApplication(eventNode)
 
@@ -60,14 +84,13 @@ class LogstashEncoder extends EncoderBase<ILoggingEvent> {
         putLoggerName(eventNode, event)
         putThreadName(eventNode, event)
         putCallerInfo(eventNode, event)
-        putStackTrace(eventNode, event)
         putType(eventNode)
 
         writeEventNode(eventNode)
     }
 
     private void putType(Map<String, Object> eventNode) {
-        eventNode.put("type", "application")
+        eventNode.put(TYPE_FIELD_NAME, APPLICATION_TYPE_VALUE)
     }
 
     private void writeEventNode(Map<String, Object> eventNode) throws IOException {
@@ -90,49 +113,57 @@ class LogstashEncoder extends EncoderBase<ILoggingEvent> {
         }
     }
 
-    private void putStackTrace(Map<String, Object> eventNode, ILoggingEvent event) {
+    private boolean putStackTrace(Map<String, Object> eventNode, ILoggingEvent event) {
         IThrowableProxy throwableProxy = event.getThrowableProxy()
-        if (throwableProxy != null) {
-            put(eventNode, "stack_trace", ThrowableProxyUtil.asString(throwableProxy))
+
+        boolean hasException = throwableProxy != null
+
+        if (hasException) {
+
+            put(eventNode, EXCEPTION_CLASS_FIELD_NAME, throwableProxy.getClassName())
+
+            put(eventNode, STACK_TRACE_FIELD_NAME, ThrowableProxyUtil.asString(throwableProxy))
         }
+
+        return hasException
     }
 
     private void putCallerInfo(Map<String, Object> eventNode, ILoggingEvent event) {
         final StackTraceElement callerData = extractCallerData(event)
 
-        put(eventNode, "caller_class_name", callerData.getClassName())
-        put(eventNode, "caller_method_name", callerData.getMethodName())
-        put(eventNode, "caller_file_name", callerData.getFileName())
-        put(eventNode, "caller_line_number", callerData.getLineNumber())
+        put(eventNode, CALLER_CLASS_NAME_FIELD_NAME, callerData.getClassName())
+        put(eventNode, CALLER_METHOD_NAME_FIELD_NAME, callerData.getMethodName())
+        put(eventNode, CALLER_FILE_NAME_FIELD_NAME, callerData.getFileName())
+        put(eventNode, CALLER_LINE_NUMBER_FIELD_NAME, callerData.getLineNumber())
     }
 
     private void putThreadName(Map<String, Object> eventNode, ILoggingEvent event) {
-        put(eventNode, "thread_name", event.getThreadName())
+        put(eventNode, THREAD_NAME_FIELD_NAME, event.getThreadName())
     }
 
     private void putLoggerName(Map<String, Object> eventNode, ILoggingEvent event) {
-        put(eventNode, "logger_name", event.getLoggerName())
+        put(eventNode, LOGGER_NAME_FIELD_NAME, event.getLoggerName())
     }
 
     private void putLevel(Map<String, Object> eventNode, ILoggingEvent event) {
-        put(eventNode, "level", event.getLevel().toString())
+        put(eventNode, LEVEL_FIELD_NAME, event.getLevel().toString())
     }
 
     private void putSourceApplication(Map<String, Object> eventNode) {
         if (StringUtils.isNotBlank(sourceApplication)) {
-            put(eventNode, "source_application", sourceApplication)
+            put(eventNode, SOURCE_APPLICATION_FIELD_NAME, sourceApplication)
         }
     }
 
     private void putVersion(Map<String, Object> eventNode) {
-        put(eventNode, "@version", SCHEMA_VERSION)
+        put(eventNode, VERSION_FIELD_NAME, SCHEMA_VERSION)
     }
 
     private void putTimestamp(Map<String, Object> eventNode, ILoggingEvent event) {
-        put(eventNode, "@timestamp", ISO_DATETIME_TIME_ZONE_FORMAT_WITH_MILLIS.format(event.getTimeStamp()))
+        put(eventNode, TIMESTAMP_FIELD_NAME, ISO_DATETIME_TIME_ZONE_FORMAT_WITH_MILLIS.format(event.getTimeStamp()))
     }
 
-    private void putTags(Map<String, Object> eventNode, ILoggingEvent event) {
+    private void putTags(Map<String, Object> eventNode, ILoggingEvent event, boolean hasException) {
         final Collection<String> tags = new LinkedList<String>()
         final Collection<String> markers = buildMarkers(event)
 
@@ -144,11 +175,15 @@ class LogstashEncoder extends EncoderBase<ILoggingEvent> {
             tags.addAll(this.userDefinedTags)
         }
 
-        put(eventNode, "tags", tags)
+        if(hasException) {
+            tags.add(EXCEPTION_OCCURRED_TAG)
+        }
+
+        put(eventNode, TAGS_FIELD_NAME, tags)
     }
 
     private void putMessage(Map<String, Object> eventNode, ILoggingEvent event) {
-        put(eventNode, "message", event.getFormattedMessage())
+        put(eventNode, MESSAGE_FIELD_NAME, event.getFormattedMessage())
     }
 
     private void put(Map<String, Object> eventNode, String key, String value) {
