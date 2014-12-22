@@ -21,12 +21,16 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class HealthConfig {
 
-
     @Bean
     HealthIndicator randomHealthIndicator() {
         new RandomHealthIndicator(
-                myClass: new RandomExceptionThrowingClass()
+                myClass: randomExceptionThrower()
         )
+    }
+
+    @Bean
+    RandomExceptionThrowingClass randomExceptionThrower() {
+        new RandomExceptionThrowingClass()
     }
 
 }

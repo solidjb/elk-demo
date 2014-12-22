@@ -29,6 +29,7 @@ dependencies {
             project(':elk-demo-logging-support'),
             project(':elk-demo-service-support'),
 
+            libraries.springAop,
             libraries.springBootActuator,
             libraries.springBootStarterJetty,
 

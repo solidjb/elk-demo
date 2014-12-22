@@ -33,6 +33,7 @@ dependencies {
     )
 
     runtime(
-            libraries.aspectjRt
+            libraries.aspectjRt,
+            libraries.aspectjTools
     )
 }
