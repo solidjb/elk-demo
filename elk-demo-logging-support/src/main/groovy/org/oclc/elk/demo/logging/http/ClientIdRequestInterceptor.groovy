@@ -14,7 +14,7 @@ import org.apache.http.HttpRequestInterceptor
 import org.apache.http.protocol.HttpContext
 
 /**
- * Interceptor to inject X-OCLC-ClientId to http header.
+ * Interceptor to inject X-DEMO-ClientId to http header.
  */
 class ClientIdRequestInterceptor implements HttpRequestInterceptor {
 
@@ -29,7 +29,7 @@ class ClientIdRequestInterceptor implements HttpRequestInterceptor {
 
         Preconditions.checkArgument(
                 StringUtils.isNotBlank(clientId),
-                'Invalid http header: X-DEMO-ClientId, the value should be a un-blank string.'
+                'Invalid http header: X-DEMO-ClientId, the value should be an un-blank string.'
         )
 
         this.clientId = clientId

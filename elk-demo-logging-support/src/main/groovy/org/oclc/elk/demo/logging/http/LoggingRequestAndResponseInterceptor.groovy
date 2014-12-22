@@ -22,7 +22,7 @@ import org.slf4j.MarkerFactory
 import org.springframework.util.StopWatch
 
 /**
- * Logs the request before it happens.
+ * Logs the request before it happens.  Then logs duration after.
  */
 @Slf4j
 class LoggingRequestAndResponseInterceptor implements HttpRequestInterceptor, HttpResponseInterceptor {

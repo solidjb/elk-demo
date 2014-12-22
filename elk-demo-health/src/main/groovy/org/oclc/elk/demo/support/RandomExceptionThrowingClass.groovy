@@ -34,9 +34,6 @@ class RandomExceptionThrowingClass {
 
             def exception = determineError(snapshot)
 
-            //Spring logs nothing, so we have to...
-            log.warn('We blew up.', exception)
-
             throw exception
         }
 
