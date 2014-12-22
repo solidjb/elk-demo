@@ -18,8 +18,8 @@
                 "1": {
                     "id": 1,
                     "color": "#EAB839",
-                    "query": "request_duration:[1001 TO 2000]",
-                    "alias": "1 - 2 Seconds",
+                    "query": "request_duration:[1001 TO 5000]",
+                    "alias": "1 - 5 Seconds",
                     "pin": false,
                     "type": "lucene",
                     "enable": true
@@ -27,8 +27,8 @@
                 "2": {
                     "id": 2,
                     "color": "#6ED0E0",
-                    "query": "request_duration:[2001 TO 3000]",
-                    "alias": "2 - 3 Seconds",
+                    "query": "request_duration:[5001 TO 10000]",
+                    "alias": "5 - 10 Seconds",
                     "pin": false,
                     "type": "lucene",
                     "enable": true
@@ -36,8 +36,8 @@
                 "3": {
                     "id": 3,
                     "color": "#EF843C",
-                    "query": "request_duration:[3001 TO 5000]",
-                    "alias": "3 - 4 Seconds",
+                    "query": "request_duration:[10001 TO 20000]",
+                    "alias": "10 - 20 Seconds",
                     "pin": false,
                     "type": "lucene",
                     "enable": true
@@ -45,8 +45,8 @@
                 "4": {
                     "id": 4,
                     "color": "#E24D42",
-                    "query": "request_duration:[5001 TO *]",
-                    "alias": "> 5 Seconds",
+                    "query": "request_duration:[20001 TO *]",
+                    "alias": "> 20 Seconds",
                     "pin": false,
                     "type": "lucene",
                     "enable": true

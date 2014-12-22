@@ -23,12 +23,12 @@ class TraceConfig {
 
     @Bean
     public CustomizableTraceInterceptor customizableTraceInterceptor() {
-        CustomizableTraceInterceptor customizableTraceInterceptor = new CustomizableTraceInterceptor()
-        customizableTraceInterceptor.setUseDynamicLogger(false)
-        customizableTraceInterceptor.setLoggerName('org.oclc.tracing.timed')
-        customizableTraceInterceptor.setEnterMessage('Entering $[targetClassShortName]:$[methodName] method with arguments $[arguments]')
-        customizableTraceInterceptor.setExitMessage('Method execution duration was $[invocationTime] ms for $[targetClassShortName]:$[methodName] with arguments $[arguments]')
-        return customizableTraceInterceptor
+        new CustomizableTraceInterceptor(
+                useDynamicLogger: false,
+                loggerName: 'org.oclc.tracing.timed',
+                enterMessage: 'Entering $[targetClassShortName]:$[methodName] method with arguments $[arguments]',
+                exitMessage: 'Method execution duration was $[invocationTime] ms for $[targetClassShortName]:$[methodName] with arguments $[arguments]'
+        )
     }
 
     @Bean

@@ -10,6 +10,7 @@ package org.oclc.elk.demo.springboot
 
 import org.oclc.elk.demo.health.RandomHealthIndicator
 import org.oclc.elk.demo.health.ServiceCallHealthIndicator
+import org.oclc.elk.demo.support.RandomExceptionThrowingClass
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -30,7 +31,9 @@ class HealthConfig {
 
     @Bean
     HealthIndicator randomHealthIndicator() {
-        new RandomHealthIndicator()
+        new RandomHealthIndicator(
+                myClass: new RandomExceptionThrowingClass()
+        )
     }
 
     @Bean

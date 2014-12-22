@@ -9,41 +9,26 @@
 package org.oclc.elk.demo.health
 
 import groovy.util.logging.Slf4j
+import org.oclc.elk.demo.support.RandomExceptionThrowingClass
 import org.springframework.boot.actuate.health.AbstractHealthIndicator
 import org.springframework.boot.actuate.health.Health
 
 @Slf4j
 class RandomHealthIndicator extends AbstractHealthIndicator {
 
+    private RandomExceptionThrowingClass myClass
+
+    void setMyClass(RandomExceptionThrowingClass myClass) {
+        this.myClass = myClass
+    }
+
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
 
         log.info('Checking Random Health')
 
-        def snapshot = System.currentTimeMillis()
-
-        if (determineError(snapshot)) {
-
-            def exception = new IllegalArgumentException('The argument you passed is exceptionally illegal.')
-
-            //Spring logs nothing, so we have to...
-            log.warn('We blew up.', exception)
-
-            throw exception
-        }
-
-        def waitTime = determineWaitTime(snapshot)
-
-        Thread.sleep(waitTime)
+        myClass.possiblyThrowException()
 
         builder.up()
-    }
-
-    def determineWaitTime(def snapshot) {
-        snapshot % 15000
-    }
-
-    boolean determineError(def snapshot) {
-        snapshot % 50 == 0
     }
 }
