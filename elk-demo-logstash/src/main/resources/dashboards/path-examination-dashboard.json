@@ -36,7 +36,7 @@
                 "0": {
                     "type": "time",
                     "field": "@timestamp",
-                    "from": "now-7d",
+                    "from": "now-1h",
                     "to": "now",
                     "mandate": "must",
                     "active": true,
