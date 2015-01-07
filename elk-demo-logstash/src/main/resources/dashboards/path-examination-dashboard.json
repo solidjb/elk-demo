@@ -275,7 +275,8 @@
                         "request_duration",
                         "message",
                         "type",
-                        "url_path"
+                        "url_path",
+                        "source_application"
                     ],
                     "highlight": [],
                     "sortable": true,
