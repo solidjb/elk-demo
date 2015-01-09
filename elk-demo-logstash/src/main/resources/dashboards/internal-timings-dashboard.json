@@ -5,7 +5,7 @@
             "list": {
                 "0": {
                     "query": "source_application:\"ServiceA\"",
-                    "alias": "",
+                    "alias": "Service A",
                     "color": "#7EB26D",
                     "id": 0,
                     "pin": false,
@@ -15,7 +15,7 @@
                 "1": {
                     "id": 1,
                     "color": "#EAB839",
-                    "alias": "",
+                    "alias": "Service B",
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
@@ -24,7 +24,7 @@
                 "2": {
                     "id": 2,
                     "color": "#6ED0E0",
-                    "alias": "",
+                    "alias": "Service C",
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
@@ -33,7 +33,7 @@
                 "3": {
                     "id": 3,
                     "color": "#EF843C",
-                    "alias": "",
+                    "alias": "Service D",
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
@@ -42,7 +42,7 @@
                 "4": {
                     "id": 4,
                     "color": "#E24D42",
-                    "alias": "",
+                    "alias": "Service E",
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
