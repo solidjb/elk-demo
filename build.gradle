@@ -82,7 +82,8 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'uk.gov', name: 'gradle-gatling-plugin', version: '0.4'
+        //Installed this manually into maven local using instructions from https://github.com/alphagov/gradle-gatling-plugin/
+        classpath group: 'uk.gov', name: 'gradle-gatling-plugin', version: '1.0'
     }
 }
 
